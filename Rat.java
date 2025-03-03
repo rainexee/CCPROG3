@@ -1,19 +1,18 @@
-class Rat extends Animal {
+public class Rat extends Animal {
     private static final int LEVEL = 1;
 
-
     public Rat(String animalName, boolean can_swim) {
-        super(animalName,can_swim); 
+        super(animalName, can_swim);
+        this.strLv = LEVEL; // Initialize strLv with LEVEL
     }
 
-    public Rat()
-    {
+    public Rat() {
         super("Rat", true);
-        if(Rat.LEVEL > super.getLevel())
-        {
-            System.out.println("Rat BEATS " + this.getAnimalName());
-        }
+        this.strLv = LEVEL; // Initialize strLv with LEVEL
     }
 
-    // existing code
+    @Override
+    public int getLevel() {
+        return this.strLv; // Return the dynamic level
+    }
 }
