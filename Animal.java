@@ -2,6 +2,10 @@ public class Animal {
     private String animalName;
     private boolean canSwim;
     protected static final int LEVEL = 0;
+    int xpos;
+	int ypos;
+	int strLv;
+	boolean captured;
 
     public Animal(String animalName, boolean canSwim) {
         this.animalName = animalName;
@@ -20,5 +24,4 @@ public class Animal {
         return LEVEL;
     }
 
-    // existing code
 }
