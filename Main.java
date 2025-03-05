@@ -7,10 +7,17 @@ import java.util.ArrayList;
 
 public class Main {
 	public static void main(String[] args) {
+		int winState = 0;
 		
+		//Player player1 = new Player(1);
+		Room room1 = new Room(1);
 		
+		room1.getTiles();
 		
-		Room room1 = new Room();
+		room1.getPlayer(1).selectAnimal();
+		//room1.getPlayer(1).moveAnimal();
+		//animal1.owner = player1;
+		/*Room room1 = new Room();
 		room1.getTiles();
 		
 		room1.movePersonRight();
@@ -41,7 +48,7 @@ public class Main {
 					input = "X";
 			}
 		}while(input == "y");
-		System.out.println("Program terminated");
+		System.out.println("Program terminated");*/
 	}
 }
 

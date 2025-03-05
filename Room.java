@@ -6,19 +6,27 @@ public class Room {
     int i, j;
     int rows = 7;
     int cols = 9;
-    private Tile[][] tiles;
-    private Animal[] animals;
+    int roomID;
+    
+    private Player[] players = new Player[2];
+    Tile[][] tiles;
+    /*private Animal[] animals;
     private Animal selectedAnimal;
     private Animal[] enemies;
-    private Animal selectedEnemy;
+    private Animal selectedEnemy;*/
 
-    public Room() {
+    public Room(int rID) {
         tiles = new Tile[rows][cols];
+        this.roomID = 1;
         initializeTiles();
+        /*
         initializePerson();
         initializeEnemy();
+        */
+        initializePlayers();
     }
-
+    
+    
     private void initializeTiles() {
         for (i = 0; i < rows; i++) {
             for (j = 0; j < cols; j++) {
@@ -64,8 +72,21 @@ public class Room {
         tiles[3][cols - 1].status = 'H';
         tiles[3][cols - 1].tileType = tiles[3][cols - 1].status;
     }
-
-    private void initializePerson() {
+    
+    private void initializePlayers() {
+    	/*for(int i = 0; i < 2; i++) {
+    		players[i].playerID = i+1;
+    		players[i].setRoom(this);
+    		System.out.println("Player " + players[i].playerID + " successfully initialized");
+    		System.out.println("Player" + players[i].playerID + " set to Room " + players[i].room.roomID + ".");
+    	}*/
+    	Player p1 = new Player(1, this);
+    	//Player p2 = new Player(2);
+    	players[0] = p1;
+    	//players[0] = p2;
+    }
+    
+    /*private void initializePerson() {
         animals = new Animal[] {
             new Rat("Rat", true),
             new Tiger("Tiger", true)
@@ -99,9 +120,9 @@ public class Room {
         selectedEnemy.ypos = 1;
         selectedEnemy.strLv = 1;
         tiles[selectedEnemy.ypos][selectedEnemy.xpos].status = 'E';
-    }
+    }*/
 
-    private void checkTile(int y, int x) {
+    /*private void checkTile(int y, int x) {
         if (tiles[y][x].status == 'E') {
             System.out.println("Holy cow, it's " + selectedEnemy.getAnimalName() + "!");
             System.out.println("Prepare for battle...");
@@ -117,7 +138,7 @@ public class Room {
             selectedAnimal.strLv -= 2; // Adjust the level
             System.out.println(selectedAnimal.getAnimalName() + "'s level is now " + selectedAnimal.getLevel());
         }
-    }
+    }*/
 
     public void getTiles() {
         for (int i = 0; i < rows; i++) {
@@ -131,7 +152,11 @@ public class Room {
             }
         }
     }
-
+    
+    public Player getPlayer(int pID) {
+    	return players[pID-1];
+    }
+    /*
     public void movePersonRight() {
         if (selectedAnimal.ypos <= rows - 1 && selectedAnimal.ypos >= 0) {
             if (selectedAnimal.xpos != cols - 1) {
@@ -194,5 +219,5 @@ public class Room {
                 selectedAnimal.ypos = selectedAnimal.ypos;
             }
         }
-    }
+    }*/
 }

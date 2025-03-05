@@ -1,15 +1,15 @@
 package javaprac;
 
-public class Tiger extends Animal {
-    private static final int LEVEL = 5;
+public class Wolf extends Animal {
+	private static final int LEVEL = 3;
 
-    public Tiger(String animalName, boolean can_swim, char token) {
+    public Wolf(String animalName, boolean can_swim, char token) {
         super(animalName, can_swim, token);
         this.strLv = LEVEL; // Initialize strLv with LEVEL
     }
 
-    public Tiger() {
-        super("Tiger", true, 't');
+    public Wolf() {
+        super("Wolf", false, 'w');
         this.strLv = LEVEL; // Initialize strLv with LEVEL
     }
 
