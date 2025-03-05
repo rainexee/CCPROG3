@@ -1,32 +1,26 @@
-package javaprac;
-
 import java.util.Random;
 
 public class Room {
     int i, j;
     int rows = 7;
     int cols = 9;
-    int roomID;
-    
-    private Player[] players = new Player[2];
-    Tile[][] tiles;
-    /*private Animal[] animals;
+    private Tile[][] tiles;
+    private Animal[] animals;
     private Animal selectedAnimal;
     private Animal[] enemies;
-    private Animal selectedEnemy;*/
+    private Animal selectedEnemy;
+    private Player[] players;
+    public int roomID;
 
-    public Room(int rID) {
+    public Room() {
         tiles = new Tile[rows][cols];
-        this.roomID = 1;
+        players = new Player[2];
         initializeTiles();
-        /*
+        initializePlayers();
         initializePerson();
         initializeEnemy();
-        */
-        initializePlayers();
     }
-    
-    
+
     private void initializeTiles() {
         for (i = 0; i < rows; i++) {
             for (j = 0; j < cols; j++) {
@@ -72,24 +66,16 @@ public class Room {
         tiles[3][cols - 1].status = 'H';
         tiles[3][cols - 1].tileType = tiles[3][cols - 1].status;
     }
-    
+
     private void initializePlayers() {
-    	/*for(int i = 0; i < 2; i++) {
-    		players[i].playerID = i+1;
-    		players[i].setRoom(this);
-    		System.out.println("Player " + players[i].playerID + " successfully initialized");
-    		System.out.println("Player" + players[i].playerID + " set to Room " + players[i].room.roomID + ".");
-    	}*/
-    	Player p1 = new Player(1, this);
-    	//Player p2 = new Player(2);
-    	players[0] = p1;
-    	//players[0] = p2;
+        players[0] = new Player(1, this);
+        players[1] = new Player(2, this);
     }
-    
-    /*private void initializePerson() {
+
+    private void initializePerson() {
         animals = new Animal[] {
-            new Rat("Rat", true),
-            new Tiger("Tiger", true)
+        new Rat("Rat", true, 'R'),
+        new Tiger("Tiger", true, 'T')
             // Add more animals here
         };
 
@@ -106,23 +92,33 @@ public class Room {
 
     private void initializeEnemy() {
         enemies = new Animal[] {
-            new Rat("Enemy Rat", true),
-            new Tiger("Enemy Tiger", true)
+            new Rat("Enemy Rat", true, 'R'),
+            new Tiger("Enemy Tiger", true, 'T')
             // Add more enemy animals here
         };
+    
+        // Assign initial positions for enemies
+        int enemyIndex = 0;
+        int rowNum = 0;
+        int colNum = cols - 3; // Start at the opposite side of the map
+    
+        // Position the enemies
+        System.out.println("Initiating enemy placement...");
+        for (int i = 0; i < enemies.length; i++) {
+            System.out.println("Current enemy index: " + enemyIndex);
+            enemies[enemyIndex].xpos = colNum;
+            enemies[enemyIndex].ypos = rowNum;
+            tiles[rowNum][colNum].status = enemies[enemyIndex].getAnimalToken();
+            System.out.println(enemies[enemyIndex].getAnimalName() + " positioned at column " + enemies[enemyIndex].xpos + ", row " + enemies[enemyIndex].ypos);
+            rowNum += 2; // Move down 2 positions for the next enemy
+            enemyIndex++; // Next enemy placement
+        }
+    
+        // Additional enemy placement logic if needed
+        System.out.println("Enemy placement complete.");
+    }
 
-        Random random = new Random();
-        selectedEnemy = enemies[random.nextInt(enemies.length)];
-
-        System.out.println("Selected Enemy: " + selectedEnemy.getAnimalName());
-
-        selectedEnemy.xpos = 2;
-        selectedEnemy.ypos = 1;
-        selectedEnemy.strLv = 1;
-        tiles[selectedEnemy.ypos][selectedEnemy.xpos].status = 'E';
-    }*/
-
-    /*private void checkTile(int y, int x) {
+    private void checkTile(int y, int x) {
         if (tiles[y][x].status == 'E') {
             System.out.println("Holy cow, it's " + selectedEnemy.getAnimalName() + "!");
             System.out.println("Prepare for battle...");
@@ -132,13 +128,13 @@ public class Room {
                 System.out.println("You died...");
             }
         }
-    
+
         if (tiles[y][x].status == 'T') {
             System.out.println("You ran into a trap! " + selectedAnimal.getAnimalName() + " is weakened!");
             selectedAnimal.strLv -= 2; // Adjust the level
             System.out.println(selectedAnimal.getAnimalName() + "'s level is now " + selectedAnimal.getLevel());
         }
-    }*/
+    }
 
     public void getTiles() {
         for (int i = 0; i < rows; i++) {
@@ -152,72 +148,76 @@ public class Room {
             }
         }
     }
-    
+
+    public void movePersonRight(Animal animal) {
+        if (animal.ypos <= rows - 1 && animal.ypos >= 0) {
+            if (animal.xpos != cols - 1) {
+                tiles[animal.ypos][animal.xpos].status = tiles[animal.ypos][animal.xpos].tileType;
+                animal.xpos++;
+                checkTile(animal.ypos, animal.xpos);
+                tiles[animal.ypos][animal.xpos].status = 'X';
+                System.out.println();
+                getTiles();
+            } else {
+                System.out.println("Destination out of bounds");
+                animal.ypos = animal.ypos;
+            }
+        }
+    }
+
+    public void movePersonLeft(Animal animal) {
+        if (animal.ypos <= cols && animal.ypos >= 0) {
+            if (animal.xpos != 0) {
+                tiles[animal.ypos][animal.xpos].status = tiles[animal.ypos][animal.xpos].tileType;
+                animal.xpos--;
+                checkTile(animal.ypos, animal.xpos);
+                tiles[animal.ypos][animal.xpos].status = 'X';
+                System.out.println();
+                getTiles();
+            } else {
+                System.out.println("Destination out of bounds");
+                animal.ypos = animal.ypos;
+            }
+        }
+    }
+
+    public void movePersonUp(Animal animal) {
+        if (animal.ypos <= rows && animal.ypos >= 0) {
+            if (animal.ypos != 0) {
+                tiles[animal.ypos][animal.xpos].status = tiles[animal.ypos][animal.xpos].tileType;
+                animal.ypos--;
+                checkTile(animal.ypos, animal.xpos);
+                tiles[animal.ypos][animal.xpos].status = 'X';
+                System.out.println();
+                getTiles();
+            } else {
+                System.out.println("Destination out of bounds");
+                animal.ypos = animal.ypos;
+            }
+        }
+    }
+
+    public void movePersonDown(Animal animal) {
+        if (animal.ypos <= rows && animal.ypos >= 0) {
+            if (animal.ypos != rows - 1) {
+                tiles[animal.ypos][animal.xpos].status = tiles[animal.ypos][animal.xpos].tileType;
+                animal.ypos++;
+                checkTile(animal.ypos, animal.xpos);
+                tiles[animal.ypos][animal.xpos].status = 'X';
+                System.out.println();
+                getTiles();
+            } else {
+                System.out.println("Destination out of bounds");
+                animal.ypos = animal.ypos;
+            }
+        }
+    }
+
     public Player getPlayer(int pID) {
-    	return players[pID-1];
-    }
-    /*
-    public void movePersonRight() {
-        if (selectedAnimal.ypos <= rows - 1 && selectedAnimal.ypos >= 0) {
-            if (selectedAnimal.xpos != cols - 1) {
-                tiles[selectedAnimal.ypos][selectedAnimal.xpos].status = tiles[selectedAnimal.ypos][selectedAnimal.xpos].tileType;
-                selectedAnimal.xpos++;
-                checkTile(selectedAnimal.ypos, selectedAnimal.xpos);
-                tiles[selectedAnimal.ypos][selectedAnimal.xpos].status = 'X';
-                System.out.println();
-                getTiles();
-            } else {
-                System.out.println("Destination out of bounds");
-                selectedAnimal.ypos = selectedAnimal.ypos;
-            }
-        }
+        return players[pID - 1];
     }
 
-    public void movePersonLeft() {
-        if (selectedAnimal.ypos <= cols && selectedAnimal.ypos >= 0) {
-            if (selectedAnimal.xpos != 0) {
-                tiles[selectedAnimal.ypos][selectedAnimal.xpos].status = tiles[selectedAnimal.ypos][selectedAnimal.xpos].tileType;
-                selectedAnimal.xpos--;
-                checkTile(selectedAnimal.ypos, selectedAnimal.xpos);
-                tiles[selectedAnimal.ypos][selectedAnimal.xpos].status = 'X';
-                System.out.println();
-                getTiles();
-            } else {
-                System.out.println("Destination out of bounds");
-                selectedAnimal.ypos = selectedAnimal.ypos;
-            }
-        }
+    public Tile[][] getTilesArray() {
+        return tiles;
     }
-
-    public void movePersonUp() {
-        if (selectedAnimal.ypos <= rows && selectedAnimal.ypos >= 0) {
-            if (selectedAnimal.ypos != 0) {
-                tiles[selectedAnimal.ypos][selectedAnimal.xpos].status = tiles[selectedAnimal.ypos][selectedAnimal.xpos].tileType;
-                selectedAnimal.ypos--;
-                checkTile(selectedAnimal.ypos, selectedAnimal.xpos);
-                tiles[selectedAnimal.ypos][selectedAnimal.xpos].status = 'X';
-                System.out.println();
-                getTiles();
-            } else {
-                System.out.println("Destination out of bounds");
-                selectedAnimal.ypos = selectedAnimal.ypos;
-            }
-        }
-    }
-
-    public void movePersonDown() {
-        if (selectedAnimal.ypos <= rows && selectedAnimal.ypos >= 0) {
-            if (selectedAnimal.ypos != rows - 1) {
-                tiles[selectedAnimal.ypos][selectedAnimal.xpos].status = tiles[selectedAnimal.ypos][selectedAnimal.xpos].tileType;
-                selectedAnimal.ypos++;
-                checkTile(selectedAnimal.ypos, selectedAnimal.xpos);
-                tiles[selectedAnimal.ypos][selectedAnimal.xpos].status = 'X';
-                System.out.println();
-                getTiles();
-            } else {
-                System.out.println("Destination out of bounds");
-                selectedAnimal.ypos = selectedAnimal.ypos;
-            }
-        }
-    }*/
 }
