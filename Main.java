@@ -3,6 +3,9 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Room room1 = new Room();
+
+                //coinflip call
+        boolean playerOneTurn = Coinflip.determineFirstPlayer(myObj);
         room1.getTiles();
 
         Scanner myObj = new Scanner(System.in);
