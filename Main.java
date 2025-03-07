@@ -1,61 +1,69 @@
+package javaprac;
+
+import java.util.Date;
+
 import java.util.Scanner;
+import java.util.ArrayList;
 
 public class Main {
-    public static void main(String[] args) {
-        Room room1 = new Room();
-
-                //coinflip call
-        boolean playerOneTurn = Coinflip.determineFirstPlayer(myObj);
-        room1.getTiles();
-
-        Scanner myObj = new Scanner(System.in);
-        String input;
-        boolean playerOneTurn = true;
-
-        do {
-            System.out.println("Player " + (playerOneTurn ? "1" : "2") + "'s turn. Enter a command (w/a/s/d):");
-            if (playerOneTurn) {
-                room1.getPlayer(1).selectAnimal();
-            } else {
-                room1.getPlayer(2).selectAnimal();
-            }
-            input = myObj.nextLine();
-            switch (input) {
-                case "w":
-                    if (playerOneTurn) {
-                        room1.movePersonUp(room1.getPlayer(1).getSelectedAnimal());
-                    } else {
-                        room1.movePersonUp(room1.getPlayer(2).getSelectedAnimal());
-                    }
-                    break;
-                case "a":
-                    if (playerOneTurn) {
-                        room1.movePersonLeft(room1.getPlayer(1).getSelectedAnimal());
-                    } else {
-                        room1.movePersonLeft(room1.getPlayer(2).getSelectedAnimal());
-                    }
-                    break;
-                case "s":
-                    if (playerOneTurn) {
-                        room1.movePersonDown(room1.getPlayer(1).getSelectedAnimal());
-                    } else {
-                        room1.movePersonDown(room1.getPlayer(2).getSelectedAnimal());
-                    }
-                    break;
-                case "d":
-                    if (playerOneTurn) {
-                        room1.movePersonRight(room1.getPlayer(1).getSelectedAnimal());
-                    } else {
-                        room1.movePersonRight(room1.getPlayer(2).getSelectedAnimal());
-                    }
-                    break;
-                default:
-                    input = "X";
-            }
-            playerOneTurn = !playerOneTurn; // Switch turns
-        } while (!input.equals("X"));
-
-        System.out.println("Program terminated");
-        myObj.close();
-    }
+	public static void main(String[] args) {
+		int winState = 0;
+		int currentPlayer = 1;
+		
+		//Player player1 = new Player(1);
+		Room room1 = new Room(1);
+		
+		room1.getTiles();
+		while(winState == 0) {
+			if(room1.getPlayer(1).turnActive == true) {
+				room1.getPlayer(1).selectAnimal();
+			}else{
+				room1.getPlayer(2).selectAnimal();
+			}
+		}
+		
+		//room1.tiles[0][2].getTileInfo();
+		
+		//room1.getPlayer(1).moveAnimal();
+		//animal1.owner = player1;
+		/*Room room1 = new Room();
+		room1.getTiles();
+		
+		room1.movePersonRight();
+		Scanner myObj = new Scanner(System.in);
+		String input;
+		
+		do{
+			input = myObj.nextLine();
+			switch(input) {
+				case "w":
+					room1.movePersonUp();
+					input = "y";
+					break;
+				case "a":
+					room1.movePersonLeft();
+					input = "y";
+					break;
+				case "s":
+					room1.movePersonDown();
+					input = "y";
+					break;
+				case "d":
+					System.out.println("Moving right");
+					room1.movePersonRight();
+					input = "y";
+					break;
+				default:
+					input = "X";
+			}
+		}while(input == "y");
+		System.out.println("Program terminated");*/
+	}
 }
+
+/*public class Person{
+	int age;
+	String name;
+	String occupation;
+	int id;
+}*/
