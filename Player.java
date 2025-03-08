@@ -1,10 +1,10 @@
-package javaprac;
-
 import java.util.Scanner;
 
 public class Player {
 	Room room;
 	int playerID;
+	private int winState = 0;
+	
 	private Animal[] myAnimals;
 	private Animal selectedAnimal;
 	
@@ -18,6 +18,14 @@ public class Player {
 		//initialize the player's pieces to their respective roster
 		initializeAnimals(this.playerID);
 		System.out.println("Welcome, Player" + this.playerID);
+	}
+	
+	public int getWinState() {
+		return this.winState;
+	}
+	
+	public int setWinState(int winner) {
+		return this.winState = winner;
 	}
 	
 	public void initializeAnimals(int pID) {
@@ -148,26 +156,37 @@ public class Player {
 		do{
 			switch(input) {
 				case "w":
-					currentY++; //STEP 1 SCOUT ONE TILE ABOVE
-					//room.tiles[currentY][currentX].checkTile(selectedAnimal); //STEP 2 CHECK THE TILE ABOVE SELECTED ANIMAL
+				//new call + new param room for checkTile
+				room.tiles[currentY][currentX].setLastPosition(currentX, currentY);
+					currentY--; //STEP 1 SCOUT ONE TILE ABOVE
+					room.tiles[currentY][currentX].checkTile(selectedAnimal, room); //STEP 2 CHECK THE TILE ABOVE SELECTED ANIMAL
 					//STEP 3 BATTLE IF NECESSARY - TO DO
 					moveUp(); //STEP 4 - MOVE FROM CURRENT SPACE TO NEW SPACE
 					input = "y";
 					break;
 				case "a":
+				//new call + new param room for checkTile
+				room.tiles[currentY][currentX].setLastPosition(currentX, currentY);
 					currentX--;
+					room.tiles[currentY][currentX].checkTile(selectedAnimal, room);
 					//room.tiles[currentY][currentX].checkTile(selectedAnimal);
 					moveLeft();
 					input = "y";
 					break;
 				case "s":
+				//new call + new param room for checkTile
+				room.tiles[currentY][currentX].setLastPosition(currentX, currentY);
 					currentY++;
+					room.tiles[currentY][currentX].checkTile(selectedAnimal, room);
 					//room.tiles[currentY][currentX].checkTile(selectedAnimal);
 					moveDown();
 					input = "y";
 					break;
 				case "d":
+				//new call + new param room for checkTile
+				room.tiles[currentY][currentX].setLastPosition(currentX, currentY);
 					currentX++;
+					room.tiles[currentY][currentX].checkTile(selectedAnimal, room);
 					//room.tiles[currentY][currentX].checkTile(selectedAnimal);
 					moveRight();
 					input = "y";
