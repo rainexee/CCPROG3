@@ -1,136 +1,172 @@
 public class Tile {
-	int ypos; //row number
-	int xpos; //col number
-	private int laststepx;
-	private int laststepy;
-	char status;
-	char tileType;
-	
-	Animal defender;
-	Animal attacker;
-	
-	public Tile(int x, int y){
-		this.ypos = y;
-		this.xpos = x;
-		this.laststepx = x;
-        this.laststepy = y;
-		System.out.println("New tile created at row " + ypos + " and col " + xpos);
-	}
-	
-	public void setLastPosition(int x, int y) {
-		System.out.println("Storing last position: row=" + y + ", col=" + x);
-        this.laststepx = x;
-        this.laststepy = y;
+    int ypos; // row number
+    int xpos; // col number
+    char status;
+    char tileType;
+
+    Animal defender;
+    Animal attacker;
+
+    public Tile(int x, int y) {
+        this.ypos = x;
+        this.xpos = y;
+        System.out.println("New tile created at row " + xpos + " and col " + ypos);
     }
-	
-	public void getTileInfo() {
-		System.out.println("I am located in row " + this.ypos + ", column " + xpos);
-		System.out.println("My tile type is " + this.tileType);
-		if(this.status != this.tileType) {
-			System.out.println("I am currently occupied.");
-		}else{
-			System.out.println("I am not currently occupied.");
-		}
-	}
-	
-	public void setDefender(Animal scouter) {
-		System.out.println("Player " + scouter.owner.playerID + "'s " + scouter.getAnimalName() + " is now defending this tile.");
-	}
-	
-	
-	//checks the type of tile
-	public void checkTile(Animal scouter, Room room) {
-		System.out.println("Currently checking tile at row " + this.ypos + ", col " + this.xpos);
-    
-		switch (this.tileType) {
-			case '_':
-				System.out.println("It's a grass tile.");
-				break;
-				case 'R':	//IMPLEMENTATION IS HERE
-				System.out.println("This is a river tile. Can ya swim?");
-				if (!scouter.isCanSwim()) {
-					System.out.println("=== Debug Info ===");
-					System.out.println("Current position: " + scouter.xpos + "," + scouter.ypos);
-					System.out.println("Last stored position: " + this.laststepx + "," + this.laststepy);
-					System.out.println("Attempting to restore position...");
 
+    public void getTileInfo() {
+        System.out.println("I am located in row " + this.ypos + ", column " + xpos);
+        System.out.println("My tile type is " + this.tileType);
+        if (this.status != this.tileType) {
+            System.out.println("I am currently occupied.");
+        } else {
+            System.out.println("I am not currently occupied.");
+        }
+    }
 
-    System.out.println(scouter.getAnimalName() + " cannot swim! Movement cancelled.");
-    // Debug print to check stored positions
-    System.out.println("Last stored position: " + this.laststepx + "," + this.laststepy);
-    // Clear current position
-    room.tiles[scouter.ypos][scouter.xpos].status = '_';
-    // Reset river tile
-    room.tiles[this.ypos][this.xpos].status = 'R';
-    // Return animal to its last position
-    room.tiles[this.laststepy][this.laststepx].status = scouter.getAnimalName().charAt(0);
-    // Update animal's coordinates PLS FIX
-	if (scouter.xpos != this.laststepx) {
-		scouter.xpos = this.laststepx;
-	}
-	if (scouter.ypos != this.laststepy) {
-		scouter.ypos = this.laststepy;
-	}
-	return;
-				}
-				System.out.println(scouter.getAnimalName() + " can swim through the river!");
-				break;
-			case 'T':
-				System.out.println("Trapped! Your " + scouter.getAnimalName() + " has been weakened.");
-				// TRAP LOGIC
-				scouter.strLv = -1;
-				System.out.println(scouter.getAnimalName() + " strLV: " + scouter.strLv);
-				break;
-			case 'H':
-				// Check the scouting animal's player ID
-				if (scouter.owner.playerID == 1 && this.xpos > 0) {
-					System.out.println("You made it to the enemy base!");
-				} else if (scouter.owner.playerID == 2 && this.xpos == 0) {
-					System.out.println("You made it to the enemy base!");
-				}
-				baseCaptured(scouter);
-				break;
-			default:
-				System.out.println("TILE TYPE UNKNOWN");
+    public void clearDefender(Animal scouter) {
+        this.defender = null;
+        this.status = this.tileType; // Reset to original tile type
+        System.out.println("Tile cleared of defender");
+    }
+
+    public void setDefender(Animal scouter) {
+        this.defender = scouter;
+        System.out.println("Player " + scouter.owner.playerID + "'s " + scouter.getAnimalName() + " is now defending this tile.");
+    }
+
+    public void setAttacker(Animal attacker) {
+        this.attacker = attacker;
+        System.out.println("Player " + attacker.owner.playerID + "'s " + attacker.getAnimalName() + " is now attacking this tile.");
+    }
+
+	public void clearAttacker() {
+		if (this.attacker != null) {
+			System.out.println("Tile cleared of attacker: " + this.attacker.getAnimalName());
+			this.attacker = null;
+		} else {
+			System.out.println("No attacker to clear.");
 		}
-		char courseOfAction = 'n';
-		System.out.println("Scouting for enemies...");
 	}
+
+    // Checks the type of tile
+    public int checkTile(Animal scouter) {
+        System.out.println("Currently checking tile at row " + this.ypos + ", col " + this.xpos);
+        int validity = 1; // automatically assume that the movement is valid unless river tiles are involved
+        switch (this.tileType) {
+            case '_':
+                System.out.println("It's a grass tile. Anyone can move here.");
+                break;
+            case 'R':
+                System.out.println("This is a river tile. Can ya swim?");
+                if (scouter.isCanSwim()) {
+                    System.out.println("Looks like " + scouter.getAnimalName() + " can swim after all!");
+                } else {
+                    System.out.println("Doesn't look like " + scouter.getAnimalName() + " knows how to swim!");
+                    validity = 0;
+                }
+                break;
+            case 'T':
+                System.out.println("Trapped! Your " + scouter.getAnimalName() + " has been weakened.");
+                scouter.strLv = -1;
+                System.out.println(scouter.getAnimalName() + " strLV: " + scouter.strLv);
+                break;
+            case 'H':
+                if (scouter.owner.playerID == 1 && this.xpos > 0) {
+                    System.out.println("You made it to the enemy base!");
+                    baseCaptured(scouter);
+                } else if (scouter.owner.playerID == 2 && this.xpos == 0) {
+                    System.out.println("You made it to the enemy base!");
+                    baseCaptured(scouter);
+                } else {
+                    System.out.println("That's your own base, genius.");
+                }
+                break;
+            default:
+                System.out.println("TILE TYPE UNKNOWN");
+        }
+
+        if (validity == 1) {
+            System.out.println("Tile verified! Scouting for enemies...");
+            char occupation = scoutTile(scouter);
+            System.out.println("Tile occupation status: " + occupation);
+            if (occupation == 'b') {
+                validity = 1;
+            }
+        } else {
+            System.out.println("Sorry, you can't move here!");
+        }
+
+        return validity;
+    }
+
+    // Checks to see if the tile is occupied by an enemy, obstructed by an ally, or is free
+    public char scoutTile(Animal scouter) {
+        char occupation = 'n';
+        System.out.println("Debug: scoutTile called for scouter " + scouter.getAnimalName());
+		//System.out.println("Debug: Defender Name is" + defender.getAnimalName()+"PlayerID"+ defender.owner.playerID);
+        if (defender == null) {
+            System.out.println("Debug: Defender is null. Tile is open.");
+            occupation = 'o';
+        } else if (defender != null && defender.owner.playerID == scouter.owner.playerID) {
+            System.out.println("Debug: Tile is obstructed by ally.");
+            occupation = 'b';	//edit this
+        } else if (defender != null && scouter.owner.playerID != defender.owner.playerID) {
+            System.out.println("Debug: Enemy defender detected. Setting attacker.");
+            setAttacker(scouter); // Use setAttacker
+            occupation = 'e';
+            if (defender.getLevel() > scouter.getLevel()) {
+                System.out.println("Debug: Defender is stronger.");
+            } else {
+                System.out.println("Debug: Attacker is stronger. Initiating battle.");
+            }
+            battle(occupation);
+            occupation = 'o';
+        }
+        return occupation;
+    }
+
+	public char battle(char OccupationStatus) {
+		System.out.println("Debug: battle called between " + this.attacker.getAnimalName() + " and " + this.defender.getAnimalName());
 	
-	//checks to see if the tile is occupied by an enemy, obstructed by an ally, or is free
-	public char scoutTile(Animal scouter) {
-		char occupation = 'n';
-		//occupation 'o' indicates open while 'b' indicates blocked
-		
-		if(defender == null) {
-			occupation = 'o';
+		if (attacker.getLevel() >= defender.getLevel()) {
+			// Attacker wins
+			System.out.println("Debug: Attacker wins. Removing defender and placing attacker.");
+			defender.owner.removeAnimal(defender); // Remove the defender from the game
+			clearDefender(defender); // Clear the defender from the tile
+			defender = attacker; // Attacker becomes the new defender
+			clearAttacker(); // Clear the attacker field
+			this.status = defender.getAnimalToken(); // Update tile status to reflect the new defender
+		} else {
+			// Defender wins
+			System.out.println("Debug: Defender wins. Removing attacker.");
+			attacker.owner.removeAnimal(attacker); // Remove the attacker from the game
+			clearAttacker(); // Clear the attacker from the tile
+			this.status = defender.getAnimalToken(); // Tile status remains the same (defender stays)
 		}
-		//defending animal is owned by the current player
-		else if(defender != null && defender.owner.playerID == scouter.owner.playerID) {
-			System.out.println("This space is obstructed by current player's " + defender.getAnimalName() + ", ownerID: " + defender.owner.playerID);
-			System.out.println("Cannot resolve movement.");
-			occupation = 'b';
-		}else if(defender != null && defender.owner.playerID != scouter.owner.playerID) {
-			System.out.println("This space is occupied by enemy player " + defender.owner.playerID + "'s " + defender.getAnimalName());
-			System.out.println("Defender's strength level: " + defender.getLevel());
-			System.out.println("Attacker's strength level: " + scouter.getLevel());
-			if(defender.getLevel() > scouter.getLevel()) {
-				System.out.println("The odds are not in your favor...");
-			}else {
-				System.out.println("Let's do this!");
-			}
-			this.attacker = scouter;
-			battle();
+	
+		if (defender == null) {
+			System.out.println("Debug: Defender is null. Resetting tile status.");
+			SetOriginalStatus(this);
+			return OccupationStatus = 'o';
 		}
-		return occupation;
+		else if (attacker == null)
+		{
+			System.out.println("DEBUG: ATTACKER IS NULL!");
+			SetOriginalStatus(this);
+			return OccupationStatus = 'o';
+		}
+		return this.status;
 	}
-	
-	public void battle() {
-		System.out.println(this.attacker + " wants to fight " + this.defender);
-	}
-	
-	public void baseCaptured(Animal myAnimal) {
-		System.out.println("Player " + myAnimal.owner.playerID + " wins!");
-	}
-	
+
+    public void baseCaptured(Animal myAnimal) {
+        myAnimal.owner.setWinState(1);
+        System.out.println("Player " + myAnimal.owner.playerID + " wins!");
+    }
+
+    // Resets the tile to its original status
+    public void SetOriginalStatus(Tile refresh) {
+        if (defender == null) {
+            this.status = this.tileType;
+        }
+    }
 }
