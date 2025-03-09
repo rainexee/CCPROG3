@@ -1,5 +1,3 @@
-
-
 public class Rat extends Animal {
     private static final int LEVEL = 1;
 

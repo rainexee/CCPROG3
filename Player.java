@@ -1,4 +1,3 @@
-
 import java.util.Scanner;
 
 public class Player {
@@ -65,6 +64,7 @@ public class Player {
 				myAnimals[animalIndex].xpos = colNum;
 				myAnimals[animalIndex].ypos = rowNum;
 				room.tiles[rowNum][colNum].status = myAnimals[animalIndex].getAnimalToken();
+				room.tiles[rowNum][colNum].setDefender(myAnimals[animalIndex]);
 				System.out.println(myAnimals[animalIndex].getAnimalName() + " positioned at column " + myAnimals[animalIndex].xpos + ", row " + myAnimals[animalIndex].ypos);
 				rowNum+=2; //moves down 2 positions for the next animal
 				animalIndex++; //next animal placement
@@ -90,6 +90,7 @@ public class Player {
                 myAnimals[animalIndex].xpos = colNum;
                 myAnimals[animalIndex].ypos = rowNum;
                 room.tiles[rowNum][colNum].status = myAnimals[animalIndex].getAnimalToken();
+				room.tiles[rowNum][colNum].setDefender(myAnimals[animalIndex]);
                 System.out.println(myAnimals[animalIndex].getAnimalName() + " positioned at column " + myAnimals[animalIndex].xpos + ", row " + myAnimals[animalIndex].ypos);
                 rowNum-=2; //moves left 2 positions for the next animal
                 animalIndex++; //next animal placement
@@ -158,122 +159,150 @@ public class Player {
 		int canMove = 0;
 		int previousX = selectedAnimal.xpos;
 		int previousY = selectedAnimal.ypos;
-		do{
+		boolean verified = false;
+		
+		//do{
 			switch(input) {
 				case "w":
 					currentY--; //STEP 1 SCOUT ONE TILE ABOVE
+					if(previousY > 0)
+					{ 
 					canMove = room.tiles[currentY][currentX].checkTile(selectedAnimal); //STEP 2 CHECK THE TILE ABOVE SELECTED ANIMAL
+					}
 					//STEP 3 BATTLE IF NECESSARY - TO DO
 					if(canMove == 1) {
 						char result = room.tiles[currentY][currentX].scoutTile(selectedAnimal);
 						System.out.println("OUTPUT HERE!"+result);
-					if(result == 'o')
-					{
-						room.tiles[previousY][previousX].clearDefender(selectedAnimal);
-						moveUp(); //STEP 4 - MOVE FROM CURRENT SPACE TO NEW SPACE
-						room.tiles[currentY][currentX].setDefender(selectedAnimal);
-					}
-					else if(result == 'e')
-					{
-						if(room.tiles[currentY][currentX].defender == selectedAnimal)
+						if(result == 'o')
 						{
 							room.tiles[previousY][previousX].clearDefender(selectedAnimal);
-							moveUp();
+							moveUp(); //STEP 4 - MOVE FROM CURRENT SPACE TO NEW SPACE
+							room.tiles[currentY][currentX].setDefender(selectedAnimal);
+							verified = true;
 						}
-					}
-					
-						input = "y";
-					}else {
-						input = "x";
+						else if(result == 'e') {
+							if(room.tiles[currentY][currentX].defender == selectedAnimal)
+							{
+								room.tiles[previousY][previousX].clearDefender(selectedAnimal);
+								moveUp();
+								verified = true;
+							}
+						}else if(result == 'b') {
+							verified = false;
+						}
+					}else{
+						verified = false;
 					}
 					break;
 				case "a":
 					currentX--;
+					if(previousX > 0)
+					{
 					canMove = room.tiles[currentY][currentX].checkTile(selectedAnimal);
+					}
 					//room.tiles[currentY][currentX].checkTile(selectedAnimal);
 					if(canMove == 1) {
 						char result = room.tiles[currentY][currentX].scoutTile(selectedAnimal);
-						//System.out.println(""+result);
-					if(result == 'o')
-					{
-						room.tiles[previousY][previousX].clearDefender(selectedAnimal);
-						moveLeft(); //STEP 4 - MOVE FROM CURRENT SPACE TO NEW SPACE
-						room.tiles[currentY][currentX].setDefender(selectedAnimal);
-					}
-					else if(result == 'e')
-					{
-						if(room.tiles[currentY][currentX].defender == selectedAnimal)
+						System.out.println("OUTPUT HERE!"+result);
+						if(result == 'o')
 						{
 							room.tiles[previousY][previousX].clearDefender(selectedAnimal);
-							moveLeft();
+							moveLeft(); //STEP 4 - MOVE FROM CURRENT SPACE TO NEW SPACE
+							room.tiles[currentY][currentX].setDefender(selectedAnimal);
+							verified = true;
 						}
-					}
-						input = "y";
-					}else {
-						input = "x";
+						else if(result == 'e') {
+							if(room.tiles[currentY][currentX].defender == selectedAnimal)
+							{
+								room.tiles[previousY][previousX].clearDefender(selectedAnimal);
+								moveUp();
+								verified = true;
+							}
+						}else if(result == 'b') {
+							verified = false;
+						}
+					}else{
+						verified = false;
 					}
 					break;
 				case "s":
 					currentY++;
+					if(previousY < room.rows - 1)
+					{
 					canMove = room.tiles[currentY][currentX].checkTile(selectedAnimal);
+					}
 					//room.tiles[currentY][currentX].checkTile(selectedAnimal);
 					if(canMove == 1) {
 						char result = room.tiles[currentY][currentX].scoutTile(selectedAnimal);
-						System.out.println(""+result);
+						System.out.println("OUTPUT HERE!"+result);
 						if(result == 'o')
 						{
-						room.tiles[previousY][previousX].clearDefender(selectedAnimal);
-						moveDown(); //STEP 4 - MOVE FROM CURRENT SPACE TO NEW SPACE
-						room.tiles[currentY][currentX].setDefender(selectedAnimal);
+							room.tiles[previousY][previousX].clearDefender(selectedAnimal);
+							moveDown(); //STEP 4 - MOVE FROM CURRENT SPACE TO NEW SPACE
+							room.tiles[currentY][currentX].setDefender(selectedAnimal);
+							verified = true;
 						}
-						else if(result == 'e')
-						{
+						else if(result == 'e') {
 							if(room.tiles[currentY][currentX].defender == selectedAnimal)
 							{
 								room.tiles[previousY][previousX].clearDefender(selectedAnimal);
-								moveDown();
+								moveUp();
+								verified = true;
 							}
+						}else if(result == 'b') {
+							verified = false;
 						}
-						input = "y";
-					}else {
-						input = "x";
+					}else{
+						verified = false;
 					}
 					break;
 				case "d":
 					currentX++;
+					if(previousX < room.cols - 1)
+					{
 					canMove = room.tiles[currentY][currentX].checkTile(selectedAnimal);
-					if(canMove == 1) {
-					char result = room.tiles[currentY][currentX].scoutTile(selectedAnimal);
-					System.out.println(""+result);
-					if(result == 'o')
-					{
-						room.tiles[previousY][previousX].clearDefender(selectedAnimal);
-						moveRight(); //STEP 4 - MOVE FROM CURRENT SPACE TO NEW SPACE
-						room.tiles[currentY][currentX].setDefender(selectedAnimal);
 					}
-					else if(result == 'e')
-					{
-						if(room.tiles[currentY][currentX].defender == selectedAnimal)
+					if(canMove == 1) {
+						char result = room.tiles[currentY][currentX].scoutTile(selectedAnimal);
+						System.out.println("OUTPUT HERE!"+result);
+						if(result == 'o')
 						{
 							room.tiles[previousY][previousX].clearDefender(selectedAnimal);
-							moveRight();
+							moveRight(); //STEP 4 - MOVE FROM CURRENT SPACE TO NEW SPACE
+							room.tiles[currentY][currentX].setDefender(selectedAnimal);
+							verified = true;
 						}
-					}
-						input = "y";
-					}else {
-						input = "x";
+						else if(result == 'e') {
+							if(room.tiles[currentY][currentX].defender == selectedAnimal)
+							{
+								room.tiles[previousY][previousX].clearDefender(selectedAnimal);
+								moveUp();
+								verified = true;
+							}
+						}else if(result == 'b') {
+							verified = false;
+						}
+					}else{
+						verified = false;
 					}
 					break;
 				case "x":
-					returnToSelect(input, selectedAnimal);
-					input = "y";
+					verified = false;
 					break;
 				default:
-					input = "X";
+					System.out.println("Try again!");
+					verified = false;
 			}
-		}while(input != "y");
-		endTurn();
-		//this.room.getTiles();
+		//}while(input != "y");
+		
+		System.out.println("Your input: " + verified);
+		
+		if(verified == true) {
+			endTurn();
+		}else {
+			System.out.println("Let's try that one again!.");
+			returnToSelect(selectedAnimal);
+		}
 		
 	}
 
@@ -357,11 +386,10 @@ public class Player {
 		}
 	}
 	
-	public void returnToSelect(String input, Animal selectedAnimal) {
+	public void returnToSelect(Animal selectedAnimal) {
 		System.out.println("Returning to animal select...");
 		selectedAnimal = null;
 		selectAnimal();
-		input = "y";
 	}
 
 	// FINAL DONT

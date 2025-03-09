@@ -1,9 +1,8 @@
-//package javaprac;
-
-import java.util.Date;
 import java.util.Scanner;
-import java.util.ArrayList;
 
+/*Represents the Driver/Main file that contains the room, players, win conditions, animal etc
+ * 
+ */
 public class Main {
 	public static void main(String[] args) {
 		

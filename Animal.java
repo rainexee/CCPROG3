@@ -1,5 +1,6 @@
 
 
+
 public class Animal {
     private String animalName;
     private char token; //char that represents the animal on the board

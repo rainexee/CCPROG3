@@ -26,7 +26,7 @@ public class Tile {
     public void clearDefender(Animal scouter) {
         this.defender = null;
         this.status = this.tileType; // Reset to original tile type
-        System.out.println("Tile cleared of defender");
+        System.out.println("Tile row " + this.ypos + " col" + this.xpos + " cleared of defender");
     }
 
     public void setDefender(Animal scouter) {
@@ -120,7 +120,7 @@ public class Tile {
                 System.out.println("Debug: Attacker is stronger. Initiating battle.");
             }
             battle(occupation);
-            occupation = 'o';
+            //occupation = 'o';
         }
         return occupation;
     }
@@ -135,7 +135,7 @@ public class Tile {
 			clearDefender(defender); // Clear the defender from the tile
 			defender = attacker; // Attacker becomes the new defender
 			clearAttacker(); // Clear the attacker field
-			this.status = defender.getAnimalToken(); // Update tile status to reflect the new defender
+			//this.status = defender.getAnimalToken(); // Update tile status to reflect the new defender
 		} else {
 			// Defender wins
 			System.out.println("Debug: Defender wins. Removing attacker.");
@@ -143,18 +143,7 @@ public class Tile {
 			clearAttacker(); // Clear the attacker from the tile
 			this.status = defender.getAnimalToken(); // Tile status remains the same (defender stays)
 		}
-	
-		if (defender == null) {
-			System.out.println("Debug: Defender is null. Resetting tile status.");
-			SetOriginalStatus(this);
-			return OccupationStatus = 'o';
-		}
-		else if (attacker == null)
-		{
-			System.out.println("DEBUG: ATTACKER IS NULL!");
-			SetOriginalStatus(this);
-			return OccupationStatus = 'o';
-		}
+
 		return this.status;
 	}
 

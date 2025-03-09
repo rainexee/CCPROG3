@@ -1,5 +1,4 @@
 
-import java.util.Random;
 
 public class Room {
     int i, j;
