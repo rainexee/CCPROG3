@@ -1,4 +1,4 @@
-package javaprac;
+
 
 public class Animal {
     private String animalName;
@@ -13,7 +13,7 @@ public class Animal {
 	
 	Player owner;
 
-    public Animal(String animalName, boolean canSwim, char token) {
+    public Animal(String animalName, boolean canSwim, char token, boolean captured) {
         this.animalName = animalName; //defines the name of the animal
         this.canSwim = canSwim; 		//determines animal's interaction with water tiles
         this.token = token;
@@ -39,5 +39,6 @@ public class Animal {
     public int getLevel() {
         return LEVEL;
     }
+
 
 }

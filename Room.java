@@ -1,4 +1,3 @@
-package javaprac;
 
 import java.util.Random;
 
@@ -92,4 +91,7 @@ public class Room {
     public Player getPlayer(int pID) {
     	return players[pID-1];
     }
+
+    // Make method to restart tile status when animal is destroyed
+    // make method that 
 }
