@@ -1,3 +1,4 @@
+
 import java.util.Scanner;
 
 public class Player {
@@ -5,7 +6,7 @@ public class Player {
 	int playerID;
 	private int winState = 0;
 	
-	private Animal[] myAnimals;
+	 Animal[] myAnimals;
 	private Animal selectedAnimal;
 	
 	boolean turnActive;
@@ -29,12 +30,15 @@ public class Player {
 	}
 	
 	public void initializeAnimals(int pID) {
-		int totalAnimals = 4; //total number of animals for the myAnimals array
+		int totalAnimals = 2; //total number of animals for the myAnimals array
 		this.myAnimals = new Animal[] {	
-	            new Elephant("Elephant", false, 'e'),
+	            new Leopard("Leopard", false, 'l', false),
+	            new Rat("Rat", true, 'r', false)
+				
+				/*new Elephant("Elephant", false, 'e'),
 	            new Wolf("Wolf", false, 'w'),
 	            new Leopard("Leopard", false, 'l'),
-	            new Rat("Rat", true, 'r')
+	            new Rat("Rat", true, 'r')*/
 	            //new Cat
 	            //new Dog
 	            //new Tiger
@@ -56,7 +60,7 @@ public class Player {
 			int colNum = 2; //starts at column 3
 			//position the first 4 animals
 			System.out.println("Initiating vanguard placement...");
-			for(int i = 0; i < 4; i++) {
+			for(int i = 0; i < 2; i++) {
 				System.out.println("Current animal index: " + animalIndex);
 				myAnimals[animalIndex].xpos = colNum;
 				myAnimals[animalIndex].ypos = rowNum;
@@ -81,7 +85,7 @@ public class Player {
             int colNum = 6; //starts at column 3
             //position the first 4 animals
             System.out.println("Initiating vanguard placement...");
-            for(int i = 0; i < 4; i++) {
+            for(int i = 0; i < 2; i++) {
                 System.out.println("Current animal index: " + animalIndex);
                 myAnimals[animalIndex].xpos = colNum;
                 myAnimals[animalIndex].ypos = rowNum;
@@ -99,30 +103,30 @@ public class Player {
 	}
 	
 	public void selectAnimal() {
-		System.out.println("Select an animal to move: ");
+		/*System.out.println("Select an animal to move: ");
 		System.out.println(" 1 - Elephant \t 2 - Wolf \t 3 - Leopard");
 		System.out.println(" 4 - Rat \t 5 - Cat \t 6 - Dog");
 		System.out.println(" 7 - Tiger \t 8 - Lion");
+		System.out.println("Press 9 to Return.");*/
+		
+		System.out.println("Select an animal to move: ");
+		System.out.println(" 1 - Leopard \t 2 - Rat");
 		System.out.println("Press 9 to Return.");
 		
 		Scanner myObj = new Scanner(System.in);
-		int index = myObj.nextInt();
+		//int index = myObj.nextInt();
+		int index = -1;
 		boolean confirmed = false;
-		do {
+		while(!confirmed) {
+			 index = myObj.nextInt();
 			switch(index) {
 				case 1:
 				case 2:
-				case 3:
-				case 4:
-				case 5:
-				case 6:
-				case 7:
-				case 8:
-					if(myAnimals[index-1].captured == false && myAnimals[index-1] != null) {
+					if(index - 1 >= 0 && index - 1 < myAnimals.length && myAnimals[index - 1] != null) {	//infinite loop
 						index = index - 1;
 						confirmed = true;
 					}else{
-						System.out.println(myAnimals[index - 1].getAnimalName() + " is not available");
+						System.out.println("That Animal is Dead");
 					}
 					break;
 				case 9:
@@ -132,7 +136,7 @@ public class Player {
 					System.out.println("Invalid input. Try Again.");
 					confirmed = false;
 			}
-		} while(confirmed == false);
+		} //while(confirmed == false);
 		//TO DO implement for when selected animal is still null
 		
 		selectedAnimal = myAnimals[index];
@@ -148,54 +152,122 @@ public class Player {
 		System.out.println("Currently selected animal: " + this.selectedAnimal.getAnimalName());
 		Scanner myStr = new Scanner(System.in);
 		String input = myStr.nextLine();
-		
+		System.out.println("LIVE VERSION");
 		int currentX = selectedAnimal.xpos;
 		int currentY = selectedAnimal.ypos;
 		int canMove = 0;
-		
+		int previousX = selectedAnimal.xpos;
+		int previousY = selectedAnimal.ypos;
 		do{
 			switch(input) {
 				case "w":
-				//new call + new param room for checkTile
-				room.tiles[currentY][currentX].setLastPosition(currentX, currentY);
 					currentY--; //STEP 1 SCOUT ONE TILE ABOVE
-					room.tiles[currentY][currentX].checkTile(selectedAnimal, room); //STEP 2 CHECK THE TILE ABOVE SELECTED ANIMAL
+					canMove = room.tiles[currentY][currentX].checkTile(selectedAnimal); //STEP 2 CHECK THE TILE ABOVE SELECTED ANIMAL
 					//STEP 3 BATTLE IF NECESSARY - TO DO
-					moveUp(); //STEP 4 - MOVE FROM CURRENT SPACE TO NEW SPACE
-					input = "y";
+					if(canMove == 1) {
+						char result = room.tiles[currentY][currentX].scoutTile(selectedAnimal);
+						System.out.println("OUTPUT HERE!"+result);
+					if(result == 'o')
+					{
+						room.tiles[previousY][previousX].clearDefender(selectedAnimal);
+						moveUp(); //STEP 4 - MOVE FROM CURRENT SPACE TO NEW SPACE
+						room.tiles[currentY][currentX].setDefender(selectedAnimal);
+					}
+					else if(result == 'e')
+					{
+						if(room.tiles[currentY][currentX].defender == selectedAnimal)
+						{
+							room.tiles[previousY][previousX].clearDefender(selectedAnimal);
+							moveUp();
+						}
+					}
+					
+						input = "y";
+					}else {
+						input = "x";
+					}
 					break;
 				case "a":
-				//new call + new param room for checkTile
-				room.tiles[currentY][currentX].setLastPosition(currentX, currentY);
 					currentX--;
-					room.tiles[currentY][currentX].checkTile(selectedAnimal, room);
+					canMove = room.tiles[currentY][currentX].checkTile(selectedAnimal);
 					//room.tiles[currentY][currentX].checkTile(selectedAnimal);
-					moveLeft();
-					input = "y";
+					if(canMove == 1) {
+						char result = room.tiles[currentY][currentX].scoutTile(selectedAnimal);
+						//System.out.println(""+result);
+					if(result == 'o')
+					{
+						room.tiles[previousY][previousX].clearDefender(selectedAnimal);
+						moveLeft(); //STEP 4 - MOVE FROM CURRENT SPACE TO NEW SPACE
+						room.tiles[currentY][currentX].setDefender(selectedAnimal);
+					}
+					else if(result == 'e')
+					{
+						if(room.tiles[currentY][currentX].defender == selectedAnimal)
+						{
+							room.tiles[previousY][previousX].clearDefender(selectedAnimal);
+							moveLeft();
+						}
+					}
+						input = "y";
+					}else {
+						input = "x";
+					}
 					break;
 				case "s":
-				//new call + new param room for checkTile
-				room.tiles[currentY][currentX].setLastPosition(currentX, currentY);
 					currentY++;
-					room.tiles[currentY][currentX].checkTile(selectedAnimal, room);
+					canMove = room.tiles[currentY][currentX].checkTile(selectedAnimal);
 					//room.tiles[currentY][currentX].checkTile(selectedAnimal);
-					moveDown();
-					input = "y";
+					if(canMove == 1) {
+						char result = room.tiles[currentY][currentX].scoutTile(selectedAnimal);
+						System.out.println(""+result);
+						if(result == 'o')
+						{
+						room.tiles[previousY][previousX].clearDefender(selectedAnimal);
+						moveDown(); //STEP 4 - MOVE FROM CURRENT SPACE TO NEW SPACE
+						room.tiles[currentY][currentX].setDefender(selectedAnimal);
+						}
+						else if(result == 'e')
+						{
+							if(room.tiles[currentY][currentX].defender == selectedAnimal)
+							{
+								room.tiles[previousY][previousX].clearDefender(selectedAnimal);
+								moveDown();
+							}
+						}
+						input = "y";
+					}else {
+						input = "x";
+					}
 					break;
 				case "d":
-				//new call + new param room for checkTile
-				room.tiles[currentY][currentX].setLastPosition(currentX, currentY);
 					currentX++;
-					room.tiles[currentY][currentX].checkTile(selectedAnimal, room);
-					//room.tiles[currentY][currentX].checkTile(selectedAnimal);
-					moveRight();
-					input = "y";
+					canMove = room.tiles[currentY][currentX].checkTile(selectedAnimal);
+					if(canMove == 1) {
+					char result = room.tiles[currentY][currentX].scoutTile(selectedAnimal);
+					System.out.println(""+result);
+					if(result == 'o')
+					{
+						room.tiles[previousY][previousX].clearDefender(selectedAnimal);
+						moveRight(); //STEP 4 - MOVE FROM CURRENT SPACE TO NEW SPACE
+						room.tiles[currentY][currentX].setDefender(selectedAnimal);
+					}
+					else if(result == 'e')
+					{
+						if(room.tiles[currentY][currentX].defender == selectedAnimal)
+						{
+							room.tiles[previousY][previousX].clearDefender(selectedAnimal);
+							moveRight();
+						}
+					}
+						input = "y";
+					}else {
+						input = "x";
+					}
 					break;
 				case "x":
-					System.out.println("Returning to animal select...");
-					selectedAnimal = null;
-					selectAnimal();
+					returnToSelect(input, selectedAnimal);
 					input = "y";
+					break;
 				default:
 					input = "X";
 			}
@@ -282,6 +354,24 @@ public class Player {
 			room.getPlayer(2).turnActive = true;
 		}else{
 			room.getPlayer(1).turnActive = true;
+		}
+	}
+	
+	public void returnToSelect(String input, Animal selectedAnimal) {
+		System.out.println("Returning to animal select...");
+		selectedAnimal = null;
+		selectAnimal();
+		input = "y";
+	}
+
+	// FINAL DONT
+	public void removeAnimal(Animal deadAnimal) {
+		for (int i = 0; i < this.myAnimals.length; i++) {
+			if (this.myAnimals[i] == deadAnimal) {
+				System.out.println("Player " + this.playerID + "'s " + deadAnimal.getAnimalName() + " has been defeated!");
+				this.myAnimals[i] = null; // Only set the array element to null
+				break;
+			}
 		}
 	}
 	
