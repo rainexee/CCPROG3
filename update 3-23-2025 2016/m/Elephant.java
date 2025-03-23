@@ -1,4 +1,3 @@
-package m;
 
 /*
  * Represents the Elephant object that is inherited from the Animal class

@@ -1,4 +1,4 @@
-package m;
+
 
 /*
  * Represents the Leopard object that is inherited from the Animal class

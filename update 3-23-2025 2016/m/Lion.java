@@ -1,4 +1,4 @@
-package m;
+
 public class Lion extends Animal {
     private static final int LEVEL = 6;
 

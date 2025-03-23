@@ -1,4 +1,4 @@
-package m;
+// package m;
 
 /*
  * Represents the Wolf object that is inherited from the Animal class

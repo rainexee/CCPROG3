@@ -1,4 +1,4 @@
-package m;
+
 public class Tile {
     int ypos; // row number
     int xpos; // col number

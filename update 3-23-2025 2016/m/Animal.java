@@ -1,5 +1,3 @@
-package m;
-
 
 
 public class Animal {

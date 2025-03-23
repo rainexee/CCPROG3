@@ -1,6 +1,8 @@
 //package m;
 import java.util.Scanner;
 
+import m.Coinflip;
+
 /*Represents the Driver/Main file that contains the room, players, win conditions, animal etc
  * 
  */

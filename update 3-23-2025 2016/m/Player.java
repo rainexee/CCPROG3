@@ -1,4 +1,4 @@
-package m;
+//package m;
 import java.util.Scanner;
 
 public class Player {
