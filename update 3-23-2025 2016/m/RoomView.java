@@ -37,10 +37,14 @@ public class RoomView {
     }
 
     public void setVisible(boolean visible) {
+        frame.setVisible(visible); // Ensure the JFrame visibility is controlled here
         if (visible) {
             System.out.println("RoomView is now visible.");
-            // Add logic to display the GUI if necessary
         }
     }
 
+    public void refresh() {
+        frame.repaint(); // Repaint the GUI
+        frame.revalidate(); // Revalidate the layout
+    }
 }
