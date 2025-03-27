@@ -1,12 +1,12 @@
-
-
+import javax.swing.*;
+import java.awt.*;
 
 public class Room {
     int i, j;
     int rows = 7;
     int cols = 9;
     int roomID;
-    
+
     private Player[] players = new Player[2];
     Tile[][] tiles;
 
@@ -16,8 +16,7 @@ public class Room {
         initializeTiles();
         initializePlayers();
     }
-    
-    
+
     private void initializeTiles() {
         for (i = 0; i < rows; i++) {
             for (j = 0; j < cols; j++) {
@@ -63,12 +62,18 @@ public class Room {
         tiles[3][cols - 1].status = 'H';
         tiles[3][cols - 1].tileType = tiles[3][cols - 1].status;
     }
-    
+
     private void initializePlayers() {
-    	players[0] = new Player(1, this);
-    	players[1] = new Player(2, this);
-    	//Player p2 = new Player(2);
-    	//players[0] = p2;
+        players[0] = new Player(1, this);
+        players[1] = new Player(2, this);
+        //Player p2 = new Player(2);
+        //players[0] = p2;
+    }
+
+    public void updateTileStatus(int row, int col, char status) {
+        tiles[row][col].status = status;
+        tiles[row][col].tileType = status;
+        // Notify the controller/view if needed
     }
 
     public void getTiles() {
@@ -83,13 +88,13 @@ public class Room {
             }
         }
     }
-    
+
     public Tile[][] getTilesArray() {
         return tiles;
     }
-    
+
     public Player getPlayer(int pID) {
-    	return players[pID-1];
+        return players[pID-1];
     }
 
     // Make method to restart tile status when animal is destroyed

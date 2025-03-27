@@ -1,64 +1,91 @@
-//package m;
-
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
-import java.util.Scanner;
 
-public class Coinflip {
-    public static boolean determineFirstPlayer(Scanner myObj) {
-        // Create a list of numbers from 1 to 8
-        List<Integer> animalNumbers = new ArrayList<>();
+public class Coinflip extends JFrame {
+    private List<Integer> animalNumbers;
+    private List<Integer> animalStrengths;
+    private int playerOneNumber = -1;
+    private int playerTwoNumber = -1;
+
+    public Coinflip() {
+        // Initialize animal numbers and strengths
+        animalNumbers = new ArrayList<>();
         for (int i = 1; i <= 8; i++) {
             animalNumbers.add(i);
         }
 
-        // Create a list of animal strength levels
-        List<Integer> animalStrengths = new ArrayList<>();
-        // Assign strength levels to the animals
-        animalStrengths.add(1); // Example strength for animal 1
-        animalStrengths.add(2); // Example strength for animal 2
-        animalStrengths.add(3); // Example strength for animal 3
-        animalStrengths.add(4); // Example strength for animal 4
-        animalStrengths.add(5); // Example strength for animal 5
-        animalStrengths.add(6); // Example strength for animal 6
-        animalStrengths.add(7); // Example strength for animal 7
-        animalStrengths.add(8); // Example strength for animal 8
+        animalStrengths = new ArrayList<>();
+        animalStrengths.add(1);
+        animalStrengths.add(2);
+        animalStrengths.add(3);
+        animalStrengths.add(4);
+        animalStrengths.add(5);
+        animalStrengths.add(6);
+        animalStrengths.add(7);
+        animalStrengths.add(8);
 
-        // literally random seed from ccprog1-2
+        // Shuffle the lists
         long seed = System.nanoTime();
         Collections.shuffle(animalNumbers, new Random(seed));
         Collections.shuffle(animalStrengths, new Random(seed));
 
-        // Player 1 picks a number, while loop checks if number out of range via negation
-        System.out.println("Player 1, pick a number from 1-8:");
-        int playerOneNumber = myObj.nextInt();
-        while (!animalNumbers.contains(playerOneNumber)) {         
-            System.out.println("Invalid number. Please pick a number from 1 to 8:");
-            playerOneNumber = myObj.nextInt();
-        }
-        animalNumbers.remove(Integer.valueOf(playerOneNumber));
-        int playerTwoNumber = animalNumbers.get(0);
+        // Set up the GUI
+        setTitle("Coinflip Game");
+        setSize(400, 300);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new GridLayout(4, 1));
 
-        
-        // Player 2 picks a number, while loop checks if number out of range via negation
-        System.out.println("Player 2, pick a number from the remaining numbers:");
-        playerTwoNumber = myObj.nextInt();
-        while (!animalNumbers.contains(playerTwoNumber)) {
-            System.out.println("Invalid number. Please pick a number from the remaining numbers:");
-            playerTwoNumber = myObj.nextInt();
-        }
-        
-        // -1 because index notation
-        int playerOneStrength = animalStrengths.get(playerOneNumber - 1);
-        int playerTwoStrength = animalStrengths.get(playerTwoNumber - 1);
+        JLabel instructionLabel = new JLabel("Player 1, pick a number from 1-8:");
+        add(instructionLabel);
 
-        //change later to animal name once we pick the final animals
-        System.out.println("Player 1 picked number: " + playerOneNumber + " with strength level: " + playerOneStrength);
-        System.out.println("Player 2 picked number: " + playerTwoNumber + " with strength level: " + playerTwoStrength);
+        JComboBox<Integer> playerOneComboBox = new JComboBox<>(animalNumbers.toArray(new Integer[0]));
+        add(playerOneComboBox);
 
-        // Determine which player goes first based on the strength level
-        return playerOneStrength > playerTwoStrength;
+        JButton submitButton = new JButton("Submit Player 1 Choice");
+        add(submitButton);
+
+        JLabel resultLabel = new JLabel("");
+        add(resultLabel);
+
+        submitButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                playerOneNumber = (int) playerOneComboBox.getSelectedItem();
+                animalNumbers.remove(Integer.valueOf(playerOneNumber));
+
+                // Update GUI for Player 2
+                instructionLabel.setText("Player 2, pick a number from the remaining numbers:");
+                playerOneComboBox.setModel(new DefaultComboBoxModel<>(animalNumbers.toArray(new Integer[0])));
+                submitButton.setText("Submit Player 2 Choice");
+
+                submitButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        playerTwoNumber = (int) playerOneComboBox.getSelectedItem();
+
+                        // Determine strengths
+                        int playerOneStrength = animalStrengths.get(playerOneNumber - 1);
+                        int playerTwoStrength = animalStrengths.get(playerTwoNumber - 1);
+
+                        // Display results
+                        resultLabel.setText("<html>Player 1 picked: " + playerOneNumber + " (Strength: " + playerOneStrength + ")<br>" +
+                                "Player 2 picked: " + playerTwoNumber + " (Strength: " + playerTwoStrength + ")<br>" +
+                                (playerOneStrength > playerTwoStrength ? "Player 1 goes first!" : "Player 2 goes first!") + "</html>");
+                        submitButton.setEnabled(false);
+
+                        // Close the Coinflip window after completion
+                        dispose();
+                    }
+                });
+            }
+        });
     }
+
+
 }

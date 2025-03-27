@@ -1,38 +1,37 @@
 // package m;
 import java.util.Scanner;
 
-/*Represents the Driver/Main file that contains the room, players, win conditions, animal etc
- * 
- */
+/* Represents the Driver/Main file that contains the room, players, win conditions, animal, etc. */
 public class Main {
-	public static void main(String[] args) {
-		
-		//Player player1 = new Player(1);
-		Room room1 = new Room(1);
-		Scanner myObj = new Scanner(System.in);
-		
-		room1.getPlayer(1).turnActive = Coinflip.determineFirstPlayer(myObj);
-		room1.getTiles();
-		while(room1.getPlayer(1).getWinState() == 0 && room1.getPlayer(2).getWinState() == 0) {
-			if(room1.getPlayer(1).turnActive == true) {
-				room1.getPlayer(1).selectAnimal();
-			}else{
-				room1.getPlayer(2).selectAnimal();
-			}
-		}
+    public static void main(String[] args) {
+        // Launch the Coinflip GUI
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            Coinflip coinflip = new Coinflip();
+            coinflip.setVisible(true);
 
-		if(room1.getPlayer(1).getWinState() == 1) {
-			System.out.println("Great job, Player 1!");
-		}else if(room1.getPlayer(2).getWinState() == 1) {
-			System.out.println("Great job, Player 2!");
-		}
-		
-	}
+            // Add a listener to detect when Coinflip is completed
+            coinflip.addWindowListener(new java.awt.event.WindowAdapter() {
+                @Override
+                public void windowClosed(java.awt.event.WindowEvent e) {
+                    // Initialize Room GUI and simulate actions
+                    Room room = new Room(1); // Example: Initialize Room with ID 1
+                    RoomView roomView = new RoomView(7, 9); // Example: RoomView with 7x9 grid
+                    RoomController roomController = new RoomController(room, roomView);
+
+                    roomView.setVisible(true); // Display the Room GUI
+
+                    // Simulate player actions
+                    System.out.println("Simulating player actions...");
+                    roomController.updateTile(2, 2, 'X'); // Example: Player marks tile (2, 2) with 'X'
+                    roomController.updateTile(3, 3, 'O'); // Example: Player marks tile (3, 3) with 'O'
+                }
+            });
+        });
+
+        // Prevent program from exiting immediately
+        System.out.println("GUIs should now be visible. Program running...");
+        while (true) {
+            // Keep the program running to allow GUI interaction
+        }
+    }
 }
-
-/*public class Person{
-	int age;
-	String name;
-	String occupation;
-	int id;
-}*/
