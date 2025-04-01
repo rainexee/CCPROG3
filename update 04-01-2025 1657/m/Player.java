@@ -1,6 +1,9 @@
-package m;
+//package m;
 import java.util.Scanner;
-
+/*
+ * This class represents the player itself, It has its designated room, playerID, winstate. Animal list, Selected animal
+ * It also contains the errormsgs and errorcode
+ */
 public class Player {
 	Room room;
 	int playerID;
@@ -15,7 +18,11 @@ public class Player {
 	
 	boolean turnActive;
 	
-	
+	/*
+	 *This is the constructor of the Player with the parameter pID and room. It assigns the player a playerID and room
+	 @param pID - Player ID 
+	 @param room - Room where the game is held
+	 */
 	public Player(int pID, Room room) {
 		this.playerID = pID;
 		this.room = room;
@@ -24,19 +31,31 @@ public class Player {
 		initializeAnimals(this.playerID);
 		System.out.println("Welcome, Player" + this.playerID);
 	}
-	
+	/*
+	 * This is a getter for the winState of the player
+	 */
 	public int getWinState() {
 		return this.winState;
 	}
-	
+	/*
+	 * this is a setter of the winState
+	 * @param winner - status of the winState
+	 * @return winState
+	 */
 	public int setWinState(int winner) {
 		return this.winState = winner;
 	}
-	
+	/*
+	 * getter for the SelectedAnimal from the list.
+	 * return selectedAnimal
+	 */
 	public Animal getSelectedAnimal() {
 		return this.selectedAnimal;
 	}
-	
+	/*
+	 * this Method initializes the animals to the player 
+	 * @param pID - Player ID where the animals are assigned to
+	 */
 	public void initializeAnimals(int pID) {
 		int totalAnimals = 8; //total number of animals for the myAnimals array
 		this.myAnimals = new Animal[] {
@@ -150,11 +169,15 @@ public class Player {
 			}
         }
 	}
-	
+	/*
+	 * Setter for the room
+	 */
 	public void setRoom(Room r) {
 		this.room = r;
 	}
-
+	/*
+	 * This is a method that checks if the selected animal is valid or not
+	 */
 	public boolean controllerSelect(int input) {
 		System.out.print(availableAnimals());
 		errorCode = -1;
@@ -185,7 +208,10 @@ public class Player {
 		selectedAnimal = myAnimals[input];
 		return confirmed;
 	}
-	
+	/*
+	 * This method is for moving the selected Animal  and checks if its a valid move or to return an error message
+	 * @param input - WASD input of the player
+	 */
 	public boolean controllerMove(char input) {
 		errorMsg = "";
 		errorCode = -1;
@@ -225,11 +251,20 @@ public class Player {
 			return false;
 		}
 	}
-	
+	/*
+	 * This method resets the animal to null
+	 */
 	public void reset() {
 		selectedAnimal = null;
 	}
-	
+	/*
+	 * This method verifies if the right movement should continue or be stopped
+	 * @param verified - if movement is verified or not
+	 * @param currentY - Current YPOS Location
+	 * @Param currentX - Current XPOS location
+	 * @param previousY - Previous YPOS location
+	 * @param previousX - previous XPOS location
+	 */
 	private boolean verifyRight(boolean verified, int currentY, int currentX, int previousY, int previousX) {
 		char result;
     	int canMove = 0;
@@ -319,6 +354,14 @@ public class Player {
             }
         }
     }
+		/*
+	 * This method verifies if the left movement should continue or be stopped
+	 * @param verified - if movement is verified or not
+	 * @param currentY - Current YPOS Location
+	 * @Param currentX - Current XPOS location
+	 * @param previousY - Previous YPOS location
+	 * @param previousX - previous XPOS location
+	 */
     private boolean verifyLeft(boolean verified, int currentY, int currentX, int previousY, int previousX) {
     	char result;
     	int canMove = 0;
@@ -391,6 +434,9 @@ public class Player {
 		}
     	return verified;
     }
+		/*
+	 * This method allows left movement 
+	 */
     public void moveLeft() {
         if (selectedAnimal.xpos <= room.cols && selectedAnimal.xpos >= 0) {
             if (selectedAnimal.xpos != 0) {
@@ -406,7 +452,14 @@ public class Player {
             }
         }
     }
-    
+    	/*
+	 * This method verifies if the up movement should continue or be stopped
+	 * @param verified - if movement is verified or not
+	 * @param currentY - Current YPOS Location
+	 * @Param currentX - Current XPOS location
+	 * @param previousY - Previous YPOS location
+	 * @param previousX - previous XPOS location
+	 */
     private boolean verifyUp(boolean verified, int currentY, int currentX, int previousY, int previousX) {
     	char result;
     	int canMove = 0;
@@ -479,6 +532,14 @@ public class Player {
 		}
     	return verified;
     }
+	/*
+	 * This method moves the player up
+	 * @param verified - if movement is verified or not
+	 * @param currentY - Current YPOS Location
+	 * @Param currentX - Current XPOS location
+	 * @param previousY - Previous YPOS location
+	 * @param previousX - previous XPOS location
+	 */
     
     public void moveUp() {
         if (selectedAnimal.ypos <= room.rows && selectedAnimal.ypos >= 0) {
@@ -495,7 +556,14 @@ public class Player {
             }
         }
     }
-    
+    	/*
+	 * This method verifies if the Down movement should continue or be stopped
+	 * @param verified - if movement is verified or not
+	 * @param currentY - Current YPOS Location
+	 * @Param currentX - Current XPOS location
+	 * @param previousY - Previous YPOS location
+	 * @param previousX - previous XPOS location
+	 */
     private boolean verifyDown(boolean verified, int currentY, int currentX, int previousY, int previousX) {
     	char result;
     	int canMove = 0;
@@ -568,6 +636,9 @@ public class Player {
 		}
     	return verified;
     }
+		/*
+	 * This method moves the player down
+	 */
     public void moveDown() {
         if (selectedAnimal.ypos <= room.rows && selectedAnimal.ypos >= 0) {
             if (selectedAnimal.ypos != room.rows - 1) {
@@ -583,7 +654,9 @@ public class Player {
             }
         }
     }
-	
+	/*
+	 * This method ends the turn
+	 */
 	public void endTurn() {
 		System.out.println("Player " + this.playerID + "'s turn is over.");
 		this.selectedAnimal = null;
@@ -596,7 +669,9 @@ public class Player {
 			room.getPlayer(1).turnActive = true;
 		}
 	}
-	
+	/*
+	 * this returns the player to select another animal
+	 */
 	public void returnToSelect(Animal selectedAnimal) {
 		System.out.println("Returning to animal select...");
 		selectedAnimal = null;
@@ -604,6 +679,9 @@ public class Player {
 	}
 
 	// FINAL DONT
+	/*
+	 * This Method removes the dead animal from the game
+	 */
 	public void removeAnimal(Animal deadAnimal) {
 		for (int i = 0; i < this.myAnimals.length; i++) {
 			if (this.myAnimals[i] == deadAnimal) {
@@ -614,7 +692,10 @@ public class Player {
 			}
 		}
 	}
-	
+	/*
+	 * This Method is the bodyCount of the deadAnimals
+	 * @return deadAnimals
+	 */
 	public int bodyCount(int deadAnimals) {
 		for(int i = 0; i < 8; i++) {
 			if(myAnimals[i] == null) {
@@ -623,7 +704,10 @@ public class Player {
 		}
 		return deadAnimals;
 	}
-	
+	/*
+	 * This method returns the error messages 
+	 * @param errorCode - the errornumber
+	 */
 	public String returnErrorMsg(int errorCode) {
 		
 		String errorMessage = "";
@@ -649,7 +733,10 @@ public class Player {
 		
 		return errorMessage;
 	}
-	
+	/*
+	 * This method lists the available animals to use
+	 * @return print
+	 */
 	public String availableAnimals() {		
 		String print = "<html><br>Select an animal to move: \n<br>";
 		String concatenate = "";
@@ -669,11 +756,18 @@ public class Player {
 		}
 		return print;
 	}
-	
+	/*
+	 * This is a setter for the error code
+	 * @param newErrorCode - ErrorCode number
+	 * @return errorCode
+	 */
 	public int setErrorCode(int newErrorCode) {
 		return this.errorCode = newErrorCode;
 	}
-	
+	/*
+	 * getter for the errorCode
+	 * @return errorCode
+	 */
 	public int getErrorCode() {
 		return this.errorCode;
 	}

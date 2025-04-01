@@ -1,8 +1,10 @@
-package m;
+//package m;
 
 import java.lang.Math;
 import java.lang.ModuleLayer.Controller;
-
+/*
+ * this class represents the tiles of the board. It has the row and column number, tiletype and status
+ */
 public class Tile {
     int ypos; // row number
     int xpos; // col number
@@ -11,13 +13,19 @@ public class Tile {
 
     Animal defender;
     Animal attacker;
-
+/*
+ * Constructor for The tile. it gets the row and column number from the two parameters
+ * @param x - col number
+ * @Param y - row number
+ */
     public Tile(int x, int y) {
         this.ypos = x;
         this.xpos = y;
         //System.out.println("New tile created at row " + xpos + " and col " + ypos);
     }
-
+/*
+ * This method displayed the tile info, tiletype and status if occupied or not
+ */
     public void getTileInfo() {
         System.out.println("I am located in row " + this.ypos + ", column " + xpos);
         System.out.println("My tile type is " + this.tileType);
@@ -27,23 +35,35 @@ public class Tile {
             System.out.println("I am not currently occupied.");
         }
     }
-
+/*
+ * this method clears the defenders and clears the tiletype
+ * @param scouter - scouts the next tile 
+ */
     public void clearDefender(Animal scouter) {
         this.defender = null;
         this.status = this.tileType; // Reset to original tile type
         //System.out.println("Tile row " + this.ypos + " col" + this.xpos + " cleared of defender");
     }
-
+/*
+ * setDefender method sets the defending animal
+ * @param scouter - Animal that is being challenged to battle
+ */
     public void setDefender(Animal scouter) {
         this.defender = scouter;
         System.out.println("Player " + scouter.owner.playerID + "'s " + scouter.getAnimalName() + " is now defending this tile.");
     }
-
+/*
+ * This method sets the attacking animal
+ * @param attacker - Attacking animal that initiated battle
+ */
     public void setAttacker(Animal attacker) {
         this.attacker = attacker;
         //System.out.println("Player " + attacker.owner.playerID + "'s " + attacker.getAnimalName() + " is now attacking this tile.");
     }
-
+/*
+ * This method clears the attacker if the attacker loses the battle
+ * @param Attacker - Attacking animal
+ */
 	public void clearAttacker(Animal Attacker) {
 		if (this.attacker != null) {
 			//System.out.println("Tile cleared of attacker: " + this.attacker.getAnimalName());
@@ -53,7 +73,10 @@ public class Tile {
 		}
 	}
 
-    // Checks the type of tile
+    /*
+     * This method checks the tile type if they can move there or not
+     * @param scouter - Animal that will move to a new tile
+     */
     public int checkTile(Animal scouter) {
         //System.out.println("Currently checking tile at row " + this.ypos + ", col " + this.xpos);
         int validity = 1; // automatically assume that the movement is valid unless river tiles are involved
@@ -118,7 +141,10 @@ public class Tile {
         return validity;
     }
 
-    // Checks to see if the tile is occupied by an enemy, obstructed by an ally, or is free
+    /*
+     * This method checks if the aenimal can move to the tile, if its free, obstructed or battle
+     * @return occupation
+     */
     public char scoutTile(Animal scouter) {
         char occupation = 'n';
         //System.out.println("Debug: scoutTile called for scouter " + scouter.getAnimalName());
@@ -145,7 +171,10 @@ public class Tile {
         }
         return occupation;
     }
-
+/*
+ * This method is for the animals battling and compares their strenght level to see who is victorious
+ * @return battleWinner
+ */
 	public int battle() {
 		//System.out.println("Debug: battle called between " + this.attacker.getAnimalName() + " and " + this.defender.getAnimalName());
 		int battleWinner = 0;
@@ -186,17 +215,26 @@ public class Tile {
 		}
 		return battleWinner;
 	}
-
+/*
+ * This method sets the winstate to the player that captures the base
+ * @param myAnimal - Animal that captured the homebase
+ */
     public void baseCaptured(Animal myAnimal) {
         myAnimal.owner.setWinState(1);
         System.out.println("Player " + myAnimal.owner.playerID + " wins!");
     }
 
-    // Resets the tile to its original status
+    
+    /*
+     * This method sets the tile to its original status
+     */
     public void SetOriginalStatus() {
         this.status = this.tileType;
     }
-    
+    /*
+     * This method weakens the animal if it has been trapped
+     * @param scouter - Animal that got trapped
+     */
     public void weakenAnimal(Animal scouter) {
     	System.out.println("Trapped! Your " + scouter.getAnimalName() + " has been weakened.");
         scouter.strLv = -1;

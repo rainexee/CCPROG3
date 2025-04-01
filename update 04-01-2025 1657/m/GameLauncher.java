@@ -1,5 +1,11 @@
-package m;
+//package m;
+/*
+ * This class is pretty much like the main class. It launches the game and the MVCS of the Coinflip and Game
+ */
 public class GameLauncher {
+    /*
+     * Main method that runs the MVC's
+     */
     public static void main(String[] args) {
 
         CoinflipModel cfmodel = new CoinflipModel();

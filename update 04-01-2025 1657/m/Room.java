@@ -1,6 +1,8 @@
-package m;
+//package m;
 
-
+/*
+ * This class represents the Room of the game. It has the rows and columns of the board and the roomID
+ */
 public class Room {
     int i, j;
     int rows = 7;
@@ -9,7 +11,11 @@ public class Room {
     
     private Player[] players = new Player[2];
     Tile[][] tiles;
-
+    
+    /*
+     * This is the constructor for the room and the roomID
+     * @param rID - RoomID
+     */
     public Room(int rID) {
         tiles = new Tile[rows][cols];
         this.roomID = 1;
@@ -17,7 +23,9 @@ public class Room {
         initializePlayers();
     }
     
-    
+    /*
+     * This method initializes the tiles of the board
+     */
     private void initializeTiles() {
         for (i = 0; i < rows; i++) {
             for (j = 0; j < cols; j++) {
@@ -63,12 +71,16 @@ public class Room {
         tiles[3][cols - 1].status = 'H';
         tiles[3][cols - 1].tileType = tiles[3][cols - 1].status;
     }
-    
+    /*
+     * This is the method that initializes Player1 and Player2
+     */
     private void initializePlayers() {
     	players[0] = new Player(1, this);
     	players[1] = new Player(2, this);
     }
-
+    /*
+     * This is a getter for the tiles and prints it out
+     */
     public void getTiles() {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
@@ -82,10 +94,16 @@ public class Room {
         }
     }
     
+    /*
+     * This is a getter for the tilesArray
+     */
     public Tile[][] getTilesArray() {
         return tiles;
     }
-    
+    /*
+     * This is a getter for the Player
+     * @param pID - PlayerID
+     */
     public Player getPlayer(int pID) {
     	return players[pID-1];
     }

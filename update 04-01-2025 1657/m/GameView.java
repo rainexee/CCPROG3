@@ -1,10 +1,19 @@
-package m;
+//package m;
 
 import javax.swing.*;
 import java.awt.*;
 
 // import m.Room;
-
+/*
+ * This is the class for the GameView for the MVC implementation of the Game. It contains the following variables
+ * boardTiles - Tiles of the board
+ * tileLabels - Labels of the tiles such as: Grass, River etc
+ * messageArea - Text of the game
+ * boardPanel - Frame of the board 
+ * instructions - Text of the instructions to guide the player on actions required
+ * ROWS - Rows of the board
+ * COLS - Columns of the board
+ */
 public class GameView extends JFrame {
     private JPanel[][] boardTiles;
     private JLabel[][] tileLabels;
@@ -16,6 +25,9 @@ public class GameView extends JFrame {
     public final int ROWS = 7;
     public final int COLS = 9;
     
+    /*
+     * Constructor of the GameView. It contains the display of the GUI itself
+     */
     public GameView() {
         super("Jungle King");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -56,7 +68,9 @@ public class GameView extends JFrame {
         setVisible(true);
     }
     
-    // Call this to update the display of the board based on the Room tiles.
+    /*
+     * This method is for updating the board of the GUI
+     */
     public void updateBoard(Room room) {
         for (int i = 0; i < ROWS; i++) {
             for (int j = 0; j < COLS; j++) {
@@ -97,15 +111,22 @@ public class GameView extends JFrame {
             }
         }
     }
-    
+    /*
+     * This method displays the message 
+     */
     public void displayMessage(String msg) {
         messageArea.append(msg + "\n");
     }
-    
+    /*
+     * This method returns the boardTiles
+     * @return boardTiles
+     */
     public JPanel[][] getBoardTiles() {
         return boardTiles;
     }
-    
+    /*
+     * displayToken method is for setting the team colours and the animal name
+     */
     public void displayToken(int i, int j, Tile thisTile) {
     	tileLabels[i][j].setText(thisTile.defender.getAnimalName());
         if(thisTile.defender.owner.playerID == 1) {
@@ -114,11 +135,9 @@ public class GameView extends JFrame {
         	tileLabels[i][j].setForeground(Color.BLACK);
         }
     }
-    
-    public void displayTile(int i, int j, Tile thisTile) {
-    	
-    }
-    
+    /*
+     * getter for the insturctions
+     */
     public JLabel getInstructions() {
     	return this.instructions;
     }
