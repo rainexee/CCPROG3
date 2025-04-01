@@ -336,6 +336,9 @@ public class Player {
 		}
 		return verified;
 	}
+	/*
+	 * This method moves the selectedanimal to the right and makes sure its not out of bounds
+	 */
     public void moveRight() {
     	//STEP 1 - animal position should not be at LEFT or RIGHT borders
     	if (selectedAnimal.xpos <= room.cols - 1 && selectedAnimal.xpos >= 0) {
@@ -540,7 +543,9 @@ public class Player {
 	 * @param previousY - Previous YPOS location
 	 * @param previousX - previous XPOS location
 	 */
-    
+    /*
+	 * this method moves the selected animal up.
+	 */
     public void moveUp() {
         if (selectedAnimal.ypos <= room.rows && selectedAnimal.ypos >= 0) {
             if (selectedAnimal.ypos != 0) {
