@@ -535,14 +535,7 @@ public class Player {
 		}
     	return verified;
     }
-	/*
-	 * This method moves the player up
-	 * @param verified - if movement is verified or not
-	 * @param currentY - Current YPOS Location
-	 * @Param currentX - Current XPOS location
-	 * @param previousY - Previous YPOS location
-	 * @param previousX - previous XPOS location
-	 */
+
     /*
 	 * this method moves the selected animal up.
 	 */
